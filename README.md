@@ -1,8 +1,8 @@
 # Gatling Tests
 
-##Running load-tests
+## Running load-tests
 
-####Running simulations locally
+#### Running simulations locally
 
 1. Run a local instance of KeyCloak
 ```
@@ -26,7 +26,7 @@ For running a specific simulation use the following command
 ../gradlew gatlingRun-simulations.KeyCloakSimulation -Denv=local
 ```
 
-###Running simulations targeting an environment
+### Running simulations targeting an environment
 
 1. Update the configuration in <i>src/gatling/resources/application.conf</i> for the target environment.
 2. To run the simulations targeting a specific environment change the value of parameter "env". 
