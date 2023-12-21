@@ -1,0 +1,14 @@
+plugins {
+  id 'idea'
+  id 'com.palantir.git-version' version '0.12.3'
+}
+
+group = 'org.demo.gatling'
+version gitVersion()
+
+allprojects {
+  repositories {
+    mavenCentral()
+  }
+  version = rootProject.version
+}
