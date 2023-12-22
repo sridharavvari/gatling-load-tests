@@ -15,7 +15,7 @@ docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin
 
 3. Run simulations locally
 
-We can run all simulations in load-tests module using the following commands in a terminal:
+We can run all simulations in load-tests module from a terminal using the following commands:
 ```
 cd load-tests
 ../gradlew gatlingRun -Denv=local
@@ -26,11 +26,11 @@ For running a specific simulation use the following command
 ../gradlew gatlingRun-simulations.KeyCloakSimulation -Denv=local
 ```
 
-### Running simulations targeting an environment
+### Running simulations targeting a specific environment
 
 1. Update the configuration in <i>src/gatling/resources/application.conf</i> for the target environment.
-2. To run the simulations targeting a specific environment change the value of parameter "env". 
-For  example to run the tests against <b>dev</b> environment you can use this command
+2. We can pass "env" parameter for running simulations targeting a specific ennvironment. 
+For  example to run the tests against <b>dev</b> environment, you can use this command
 ```
 ../gradlew gatlingRun -Denv=dev
 ```
