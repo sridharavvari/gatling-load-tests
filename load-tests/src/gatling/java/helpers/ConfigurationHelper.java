@@ -29,7 +29,6 @@ public class ConfigurationHelper {
         try {
             return Optional.ofNullable(conf.getString(String.format("%s.%s.%s", context, subContext, configName)));
         } catch (Exception e) {
-            e.printStackTrace();
             return Optional.empty();
         }
     }
