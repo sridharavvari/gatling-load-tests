@@ -2,7 +2,6 @@ package scenarios;
 
 import io.gatling.javaapi.core.FeederBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
-import io.gatling.javaapi.http.HttpRequestActionBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,22 +18,22 @@ public class KeyCloakScenarios {
     public static ScenarioBuilder accessTokenRequestScenario() {
         FeederBuilder<Object> feeder = getKeyCloakClientsFeeder();
 
-        HttpRequestActionBuilder httpRequestToGetInitialAccessToken = http("POST for access token   ")
+        var getInitialAccessToken = http("POST to get an access token")
                 .post(String.format("/realms/%s/protocol/openid-connect/token", KEYCLOAK_REALM))
                 .formParam("grant_type", "password")
-                .formParam("client_id", "#{clientId}")
-                .formParam("client_secret", "#{clientSecret}")
+                .formParam("client_id", KEYCLOAK_CLIENT_ID)
+                .formParam("client_secret", KEYCLOAK_CLIENT_SECRET)
                 .formParam("scope", "openid")
                 .formParam("username", "#{username}")
                 .formParam("password", "#{password}")
                 .check(status().is(200))
                 .check(jsonPath("$..refresh_token").exists().saveAs("refreshToken"));
 
-        var httpRequestToGetNewAccessTokenUsingRefreshToken = http("POST for access token from refresh token")
+        var getNewAccessTokenUsingRefreshToken = http("POST to get an access token from a refresh token")
                 .post(String.format("/realms/%s/protocol/openid-connect/token", KEYCLOAK_REALM))
                 .formParam("grant_type", "refresh_token")
-                .formParam("client_id", "#{clientId}")
-                .formParam("client_secret", "#{clientSecret}")
+                .formParam("client_id", KEYCLOAK_CLIENT_ID)
+                .formParam("client_secret", KEYCLOAK_CLIENT_SECRET)
                 .formParam("refresh_token", "#{refreshToken}")
                 .check(status().is(200))
                 .check(jsonPath("$..access_token").saveAs("accessTokenFromRefreshToken"))
@@ -42,40 +41,36 @@ public class KeyCloakScenarios {
 
         return scenario("Request Access Token using Client Credentials")
                 .feed(feeder)
-                .exec(httpRequestToGetInitialAccessToken,
-                        httpRequestToGetNewAccessTokenUsingRefreshToken);
+                .exec(getInitialAccessToken)
+                .exec(getNewAccessTokenUsingRefreshToken);
     }
 
 
     private static FeederBuilder<Object> getKeyCloakClientsFeeder() {
         if (KEYCLOAK_CREATE_NEW_USERS) {
-            return listFeeder(createKeyCloakClientUsers()).circular();
+            return listFeeder(createKeyCloakUsers()).circular();
         } else {
-            return listFeeder(csv(KEYCLOAK_CLIENTS_CSV).readRecords()).circular();
+            return listFeeder(csv(KEYCLOAK_USERS_CSV).readRecords()).circular();
         }
     }
 
-    private static List<Map<String, Object>> createKeyCloakClientUsers() {
-        List<Map<String, Object>> keyCloakUserClients = new ArrayList<>();
+    private static List<Map<String, Object>> createKeyCloakUsers() {
+        List<Map<String, Object>> keyCloakUsers = new ArrayList<>();
 
-        for (int i = 0; i < KEYCLOAK_CREATE_USERS_COUNT; i++) {
-            String clientId = "testClientId" + i;
-            String clientSecret = "testClientSecret" + i;
+        for (int i = 0; i < KEYCLOAK_USERS_COUNT; i++) {
             String username = "username" + i;
             String password = "password" + i;
 
             //api to create user
-            //createKeyCloakUser(clientId, clientSecret, username, password);
+            //createKeyCloakUser(username, password);
             HashMap<String, Object> keyCloakUserMap = new HashMap<>() {{
-                put("clientId", clientId);
-                put("clientSecret", clientSecret);
                 put("username", username);
                 put("password", password);
             }};
 
-            keyCloakUserClients.add(keyCloakUserMap);
+            keyCloakUsers.add(keyCloakUserMap);
         }
 
-        return keyCloakUserClients;
+        return keyCloakUsers;
     }
 }
