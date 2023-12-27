@@ -35,3 +35,14 @@ For  example to run the tests against <b>dev</b> environment, you can use this c
 ../gradlew gatlingRun -Denv=dev
 ```
 
+### Automatic test users creation as part of KeyCloakSimulation
+KeyCloakSimulation can create and delete test users as part of the run. 
+
+Follow these steps for it to work:
+1. Add "keyCloakAdminUser" & "keyCloakAdminPassword" config to application.conf(admin user should have atleast <i>manage-users,
+   view-realm, view-users, view-clients</i> roles)
+2. While running simulation pass the parameter <i>keyCloakCreateUsers=true</i>
+```
+../gradlew gatlingRun-simulations.KeyCloakSimulation -Denv=local -DkeyCloakCreateUsers=true
+```
+

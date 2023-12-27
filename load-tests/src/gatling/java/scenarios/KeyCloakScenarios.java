@@ -2,11 +2,7 @@ package scenarios;
 
 import io.gatling.javaapi.core.FeederBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import keycloak.KeyCloakAdminClient;
 
 import static config.KeyCloakConfig.*;
 import static io.gatling.javaapi.core.CoreDsl.*;
@@ -48,29 +44,10 @@ public class KeyCloakScenarios {
 
     private static FeederBuilder<Object> getKeyCloakClientsFeeder() {
         if (KEYCLOAK_CREATE_NEW_USERS) {
-            return listFeeder(createKeyCloakUsers()).circular();
+            KeyCloakAdminClient.get().createTestUsers();
+            return listFeeder(KeyCloakAdminClient.get().getTestUsers()).circular();
         } else {
             return listFeeder(csv(KEYCLOAK_USERS_CSV).readRecords()).circular();
         }
-    }
-
-    private static List<Map<String, Object>> createKeyCloakUsers() {
-        List<Map<String, Object>> keyCloakUsers = new ArrayList<>();
-
-        for (int i = 0; i < KEYCLOAK_USERS_COUNT; i++) {
-            String username = "username" + i;
-            String password = "password" + i;
-
-            //api to create user
-            //createKeyCloakUser(username, password);
-            HashMap<String, Object> keyCloakUserMap = new HashMap<>() {{
-                put("username", username);
-                put("password", password);
-            }};
-
-            keyCloakUsers.add(keyCloakUserMap);
-        }
-
-        return keyCloakUsers;
     }
 }

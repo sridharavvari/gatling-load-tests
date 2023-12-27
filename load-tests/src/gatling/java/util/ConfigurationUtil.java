@@ -1,11 +1,11 @@
-package helpers;
+package util;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 import java.util.Optional;
 
-public class ConfigurationHelper {
+public class ConfigurationUtil {
     private static Config conf = ConfigFactory.load();
     private static String environment = System.getProperty("env", "local");
 

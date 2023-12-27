@@ -8,3 +8,7 @@ gatling {
   logLevel = 'WARN' // logback root level
   logHttp = 'NONE' // set to 'ALL' for all HTTP traffic in TRACE, 'FAILURES' for failed HTTP traffic in DEBUG
 }
+
+dependencies {
+    gatlingImplementation("org.keycloak:keycloak-admin-client:23.0.3")
+}
